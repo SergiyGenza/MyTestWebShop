@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { loadStripe } from '@stripe/stripe-js';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { CartService } from 'src/app/services/cart.service';
 import { Cart, CartItem } from '../models/cart.model';
@@ -37,7 +39,7 @@ export class CartComponent implements OnInit {
   dataSource: CartItem[] = [];
   cartSubscription: Subscription | undefined;
 
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.cartSubscription = this.cartService.cart.subscribe((_cart: Cart) => {
@@ -67,15 +69,15 @@ export class CartComponent implements OnInit {
   }
 
   onCheckout(): void {
-    //   this.http
-    //     .post('http://localhost:4242/checkout', {
-    //       items: this.cart.items,
-    //     })
-    //     .subscribe(async (res: any) => {
-    //       let stripe = await loadStripe('your token');
-    //       stripe?.redirectToCheckout({
-    //         sessionId: res.id,
-    //       });
-    //     });
+      this.http
+        .post('http://localhost:4242/checkout', {
+          items: this.cart.items,
+        })
+        .subscribe(async (res: any) => {
+          let stripe = await loadStripe('add token');
+          stripe?.redirectToCheckout({
+            sessionId: res.id,
+          });
+        });
   }
 }
