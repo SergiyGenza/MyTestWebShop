@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public onShowCategory(newCategory: string): void {
     this.category = newCategory;
+    this.getProducts;
   }
 
   onAddToCard(product: Product): void {
@@ -47,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private getProducts(): void {
-    this.productsSubscription = this.storageeService.getAllProducts(this.count, this.sort)
+    this.productsSubscription = this.storageeService.getAllProducts(this.count, this.sort, this.category)
       .subscribe((_products) => this.products = _products)
   }
 
